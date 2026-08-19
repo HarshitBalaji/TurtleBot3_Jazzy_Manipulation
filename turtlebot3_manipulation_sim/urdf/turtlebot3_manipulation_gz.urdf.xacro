@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"
+       name="turtlebot3_manipulation">
+
+  <xacro:arg name="prefix" default=""/>
+<xacro:include
+  filename="$(find turtlebot3_manipulation_description)/gazebo/materials.xacro"/>
+  <!-- Existing robot geometry -->
+  <xacro:include
+    filename="$(find turtlebot3_manipulation_description)/urdf/turtlebot3_waffle_pi.urdf.xacro"/>
+
+  <xacro:include
+    filename="$(find turtlebot3_manipulation_description)/urdf/open_manipulator_x.urdf.xacro"/>
+
+  <!-- TurtleBot3 Waffle Pi -->
+  <xacro:turtlebot3_waffle_pi
+    prefix="$(arg prefix)"/>
+
+  <!-- OpenManipulator-X -->
+  <xacro:open_manipulator_x
+    prefix="$(arg prefix)"/>
+
+  <!-- Mount manipulator on TurtleBot3 -->
+  <joint name="$(arg prefix)base_fixed" type="fixed">
+    <parent link="$(arg prefix)base_link"/>
+    <child link="$(arg prefix)link1"/>
+    <origin xyz="-0.092 0.0 0.091" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Gazebo Sim ros2_control -->
+  <ros2_control name="TurtleBot3ManipulationGazebo" type="system">
+
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <joint name="$(arg prefix)joint1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)joint2">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)joint3">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)joint4">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)gripper_left_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)gripper_right_joint">
+      <param name="mimic">$(arg prefix)gripper_left_joint</param>
+      <param name="multiplier">1</param>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+  </ros2_control>
+
+  <!-- Gazebo Sim ros2_control plugin -->
+  <gazebo>
+    <plugin
+      filename="libgz_ros2_control-system.so"
+      name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+
+      <parameters>
+        $(find turtlebot3_manipulation_sim)/config/controllers.yaml
+      </parameters>
+
+    </plugin>
+  </gazebo>
+
+</robot>
