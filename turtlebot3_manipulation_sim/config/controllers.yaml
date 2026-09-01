@@ -10,6 +10,9 @@ controller_manager:
 
     gripper_controller:
       type: parallel_gripper_action_controller/GripperActionController
+    
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
 
 arm_controller:
   ros__parameters:
@@ -41,3 +44,20 @@ gripper_controller:
       - velocity
 
     action_monitor_rate: 20.0
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names:
+      - wheel_left_joint
+
+    right_wheel_names:
+      - wheel_right_joint
+
+    wheel_separation: 0.288
+    wheel_radius: 0.033
+
+    publish_rate: 50.0
+    base_frame_id: base_link
+    odom_frame_id: odom
+
+    use_stamped_vel: true

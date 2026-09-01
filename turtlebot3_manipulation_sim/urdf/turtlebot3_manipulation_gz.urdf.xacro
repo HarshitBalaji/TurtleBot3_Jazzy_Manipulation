@@ -34,6 +34,18 @@
     <hardware>
       <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
+    
+    <joint name="$(arg prefix)wheel_left_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg prefix)wheel_right_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
 
     <joint name="$(arg prefix)joint1">
       <command_interface name="position"/>

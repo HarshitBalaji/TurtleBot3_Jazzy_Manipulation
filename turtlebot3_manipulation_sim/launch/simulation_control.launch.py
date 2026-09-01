@@ -93,6 +93,8 @@ def generate_launch_description():
         f"ros2 run controller_manager spawner joint_state_broadcaster "
         f"--controller-manager /controller_manager "
         f"--param-file {controllers_yaml} && "
+        f"ros2 run controller_manager spawner diff_drive_controller "
+        f"--param-file {controllers_yaml} && "
         f"ros2 run controller_manager spawner arm_controller "
         f"--controller-manager /controller_manager "
         f"--param-file {controllers_yaml} && "
