@@ -26,7 +26,7 @@ def generate_launch_description():
     world = os.path.join(
         sim_share,
         'worlds',
-        'empty.sdf'
+        'world1.sdf'
     )
 
     robot_description = Command([
@@ -46,6 +46,33 @@ def generate_launch_description():
         launch_arguments={
             'gz_args': ['-r ', world]
         }.items()
+    )
+    
+    clock_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'
+        ],
+        output='screen'
+    )
+
+    scan_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan'
+        ],
+        output='screen'
+    )
+
+    imu_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/imu@sensor_msgs/msg/Imu[gz.msgs.Imu'
+        ],
+        output='screen'
     )
 
     robot_state_publisher = Node(
@@ -72,6 +99,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         gazebo,
+        clock_bridge,
+        scan_bridge,
         robot_state_publisher,
         spawn_robot,
     ])

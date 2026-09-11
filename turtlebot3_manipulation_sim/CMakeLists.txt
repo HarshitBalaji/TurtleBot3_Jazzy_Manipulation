@@ -41,6 +41,10 @@ add_executable(move_group_controller
   src/move_group_controller.cpp
 )
 
+add_executable(robot_motion_controller
+  src/robot_motion_controller.cpp
+) 
+
 ament_target_dependencies(arm_controller
   rclcpp
   rclcpp_action
@@ -53,9 +57,13 @@ ament_target_dependencies(move_group_controller
   moveit_ros_planning_interface
 )
 
+ament_target_dependencies(robot_motion_controller
+  rclcpp
+  moveit_ros_move_group
+)
 
 install(
-  TARGETS arm_controller move_group_controller
+  TARGETS arm_controller move_group_controller robot_motion_controller
   DESTINATION lib/${PROJECT_NAME}
 )
 

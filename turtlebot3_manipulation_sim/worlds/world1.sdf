@@ -1,0 +1,325 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.9">
+  <world name="world1">
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics"/>
+
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands"/>
+
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster"/>
+
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================= -->
+    <!-- Walls                                                      -->
+    <!-- ========================================================= -->
+
+    <!-- North wall: y = +5 -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 5 1 0 0 0</pose>
+
+      <link name="wall_link">
+
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>10 0.1 2</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>10 0.1 2</size>
+            </box>
+          </geometry>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- South wall: y = -5 -->
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -5 1 0 0 0</pose>
+
+      <link name="wall_link">
+
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>10 0.1 2</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>10 0.1 2</size>
+            </box>
+          </geometry>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- East wall: x = +5 -->
+    <model name="wall_east">
+      <static>true</static>
+      <pose>5 0 1 0 0 0</pose>
+
+      <link name="wall_link">
+
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 10 2</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 10 2</size>
+            </box>
+          </geometry>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- West wall: x = -5 -->
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-5 0 1 0 0 0</pose>
+
+      <link name="wall_link">
+
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 10 2</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 10 2</size>
+            </box>
+          </geometry>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- ========================================================= -->
+    <!-- PICK TABLE                                                 -->
+    <!-- ========================================================= -->
+
+    <!--
+      Table center:
+        x = 2.0
+        y = 2.0
+        z = 0
+
+      Table top:
+        z = 1.5
+
+      Table dimensions:
+        1.5 x 1.2 x 0.1
+    -->
+
+    <model name="pick_table">
+      <static>true</static>
+      <pose>2.0 2.0 0 0 0 0</pose>
+
+      <link name="table_link">
+
+        <!-- Table top -->
+        <collision name="top_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.01</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="top_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- ========================================================= -->
+    <!-- OBJECT TO PICK                                             -->
+    <!-- ========================================================= -->
+
+    <!--
+      Object center:
+        x = 2.0
+        y = 2.0
+        z = 0.15
+
+      Cube size = 0.2 m
+
+      Therefore:
+        bottom = 1.5 m
+        top    = 1.7 m
+
+      It sits directly on the table.
+    -->
+
+    <model name="pick_object">
+      <pose>2.0 2.0 0.15 0 0 0</pose>
+
+      <link name="object_link">
+
+        <inertial>
+          <mass>0.2</mass>
+
+          <inertia>
+            <ixx>0.001333</ixx>
+            <iyy>0.001333</iyy>
+            <izz>0.001333</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- ========================================================= -->
+    <!-- PLACE TABLE                                                -->
+    <!-- ========================================================= -->
+
+    <model name="place_table">
+      <static>true</static>
+      <pose>2.0 -2.0 0 0 0 0</pose>
+
+      <link name="table_link">
+
+        <collision name="top_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.01</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="top_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0.8 1</ambient>
+            <diffuse>1 0.5 0.8 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+
+      </link>
+    </model>
+  </world>
+</sdf>  
+ 
